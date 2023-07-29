@@ -25,4 +25,11 @@ class UserController(
     ): ResponseEntity<CoreSuccessResponseDto> {
         return ResponseEntity.ok(userService.createUser(body))
     }
+
+    @PostMapping("login")
+    fun loginUser(
+        @RequestBody body: User
+    ): ResponseEntity<User> {
+        return ResponseEntity.ok(userService.loginUser(body))
+    }
 }

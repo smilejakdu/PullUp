@@ -28,4 +28,18 @@ class UserService(private val userRepository: IUserRepository) {
 
         return CoreSuccessResponseDto()
     }
+
+    fun loginUser(user: User): User {
+        val encoder = BCryptPasswordEncoder()
+        val userFromDb = userRepository.findByEmail(user.email)
+            .orElseThrow {
+                Exception("User not found")
+            }
+
+        if (encoder.matches(user.password, userFromDb.password)) {
+            return userFromDb
+        }
+
+        throw Exception("User not found")
+    }
 }
