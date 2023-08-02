@@ -1,9 +1,21 @@
 version: '3.8'
 services:
-  app:
+  nginx:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: compose/nginx/Dockerfile
+    container_name: pull-up-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - pull-up-backend
+
+  pull-up-backend:
+    build:
+      context: .
+      dockerfile: compose/backend/Dockerfile
     env_file:
       - .env
     container_name: pull-up-backend
@@ -12,4 +24,4 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "13010:13010"
+      - "13012:13012"
