@@ -7,8 +7,6 @@ services:
     container_name: pull-up-nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - pull-up-backend
 
@@ -24,4 +22,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
-      - "13012:13012"
+      - "13010:13010"
+
+networks:
+  default:
+    name: pull-up-network
