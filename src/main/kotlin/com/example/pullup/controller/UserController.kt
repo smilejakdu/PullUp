@@ -1,7 +1,9 @@
 package com.example.pullup.controller
 
-import com.example.pullup.controller.UserDto.CreateUserRequestDto
-import com.example.pullup.controller.UserDto.LoginUserRequestDto
+import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
+import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
+import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
+import com.example.pullup.controller.userDto.loginUserDto.LoginUserResponseDto
 import com.example.pullup.domain.User
 import com.example.pullup.services.UserService
 import com.example.pullup.shared.response.*
@@ -26,7 +28,7 @@ class UserController(
 
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "SUCCESS",
-            content = [Content(schema = Schema(implementation = CoreSuccessResponseWithData::class))]
+            content = [Content(schema = Schema(implementation = CreateUserResponseDto::class))]
         ),
         ApiResponse(responseCode = "400", description = "Bad Request",
             content = [Content(schema = Schema(implementation = CoreBadResponseDto::class))]
@@ -47,7 +49,7 @@ class UserController(
 
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "SUCCESS",
-            content = [Content(schema = Schema(implementation = CoreSuccessResponseWithData::class))]
+            content = [Content(schema = Schema(implementation = LoginUserResponseDto::class))]
         ),
         ApiResponse(responseCode = "400", description = "Bad Request",
             content = [Content(schema = Schema(implementation = CoreBadResponseDto::class))]

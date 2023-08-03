@@ -2,8 +2,6 @@ package com.example.pullup.domain
 
 import com.example.pullup.shared.TimeEntity
 import jakarta.persistence.*
-import lombok.Builder
-import lombok.Data
 import lombok.NoArgsConstructor
 
 @Entity

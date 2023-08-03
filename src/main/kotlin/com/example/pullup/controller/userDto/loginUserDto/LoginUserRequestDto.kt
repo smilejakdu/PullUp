@@ -1,4 +1,4 @@
-package com.example.pullup.controller.UserDto
+package com.example.pullup.controller.userDto.loginUserDto
 
 data class LoginUserRequestDto(
     val teacherCheck: Boolean,

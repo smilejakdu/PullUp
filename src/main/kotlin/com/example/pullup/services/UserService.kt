@@ -1,7 +1,7 @@
 package com.example.pullup.services
 
-import com.example.pullup.controller.UserDto.CreateUserRequestDto
-import com.example.pullup.controller.UserDto.LoginUserRequestDto
+import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
+import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException

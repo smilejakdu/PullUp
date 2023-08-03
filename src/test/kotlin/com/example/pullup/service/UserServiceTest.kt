@@ -1,8 +1,10 @@
 package com.example.pullup.service
 
+import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.services.UserService
+import com.example.pullup.shared.response.CoreSuccessResponseDto
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -58,6 +60,28 @@ internal class UserServiceTest {
 
         // Then
         assertEquals("User not found", exception.message)
+    }
+
+    @Test
+    fun createUserTest(): Unit {
+        // Given
+        val user = User(
+            name = "John Doe",
+            email = "ash@gmail.com",
+            teacherCheck = false, // or true, depending on what you want to test
+            password = "password"
+        )
+        // When
+        val createUserRequestDto = CreateUserRequestDto(
+            name = "John Doe",
+            email = "ash@gmail.com",
+            teacherCheck = false, // or true, depending on what you want to test
+            password = "password"
+        )
+        val result = userService.createUser(createUserRequestDto)
+        println("result:$result")
+        // Then
+        assertEquals(CoreSuccessResponseDto(), result)
     }
 }
 
