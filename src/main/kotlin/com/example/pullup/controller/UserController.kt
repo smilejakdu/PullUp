@@ -27,7 +27,7 @@ class UserController(
     }
 
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "SUCCESS",
+        ApiResponse(responseCode = "201", description = "SUCCESS",
             content = [Content(schema = Schema(implementation = CreateUserResponseDto::class))]
         ),
         ApiResponse(responseCode = "400", description = "Bad Request",
@@ -43,7 +43,7 @@ class UserController(
     @PostMapping("create")
     fun createUser(
         @RequestBody body: CreateUserRequestDto
-    ): ResponseEntity<CoreSuccessResponseDto> {
+    ): ResponseEntity<CreateUserResponseDto> {
         return ResponseEntity.ok(userService.createUser(body))
     }
 

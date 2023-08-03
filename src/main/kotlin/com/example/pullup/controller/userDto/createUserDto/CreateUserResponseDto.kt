@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatusCode
 data class CreateUserResponseDto(
     @Schema(example = "true")
     override val success: Boolean = true,
-    @Schema(example = "Success")
-    override val message: String = "Success",
+    @Schema(example = "SUCCESS")
+    override val message: String = "SUCCESS",
     @Schema(example = "200")
     override val statusCode: Int = HttpStatusCode.valueOf(200).value(),
     @Schema()

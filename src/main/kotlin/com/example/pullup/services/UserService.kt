@@ -1,6 +1,7 @@
 package com.example.pullup.services
 
 import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
+import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
@@ -20,7 +21,7 @@ class UserService(private val userRepository: IUserRepository) {
         }
     }
 
-    fun createUser(userRequestDto: CreateUserRequestDto): CoreSuccessResponseDto {
+    fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {
         val user = User(
             teacherCheck = userRequestDto.teacherCheck,
             name = userRequestDto.name,
@@ -29,7 +30,7 @@ class UserService(private val userRepository: IUserRepository) {
         )
 
         userRepository.save(user)
-        return CoreSuccessResponseDto()
+        return CreateUserResponseDto(data = user)
     }
 
     fun loginUser(user: LoginUserRequestDto): CoreSuccessResponseWithData {
