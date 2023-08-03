@@ -4,7 +4,6 @@ import com.example.pullup.controller.UserDto.CreateUserRequestDto
 import com.example.pullup.controller.UserDto.LoginUserRequestDto
 import com.example.pullup.domain.User
 import com.example.pullup.services.UserService
-import com.example.pullup.shared.exception.HttpException
 import com.example.pullup.shared.response.*
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -22,9 +21,23 @@ class UserController(
 ) {
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Long): ResponseEntity<User> {
-        return ResponseEntity.ok(userService.getUserById(id))
+        return ResponseEntity.ok(userService.findUserById(id))
     }
 
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "SUCCESS",
+            content = [Content(schema = Schema(implementation = CoreSuccessResponseWithData::class))]
+        ),
+        ApiResponse(responseCode = "400", description = "Bad Request",
+            content = [Content(schema = Schema(implementation = CoreBadResponseDto::class))]
+        ),
+        ApiResponse(responseCode = "404", description = "Not Found",
+            content = [Content(schema = Schema(implementation = CoreNotFoundResponseDto::class))]
+        ),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [Content(schema = Schema(implementation = CoreInternalServerResponseDto::class))]
+        )
+    ])
     @PostMapping("create")
     fun createUser(
         @RequestBody body: CreateUserRequestDto
@@ -33,24 +46,16 @@ class UserController(
     }
 
     @ApiResponses(value = [
-        ApiResponse(
-            responseCode = "200",
-            description = "SUCCESS",
+        ApiResponse(responseCode = "200", description = "SUCCESS",
             content = [Content(schema = Schema(implementation = CoreSuccessResponseWithData::class))]
         ),
-        ApiResponse(
-            responseCode = "400",
-            description = "Bad Request",
+        ApiResponse(responseCode = "400", description = "Bad Request",
             content = [Content(schema = Schema(implementation = CoreBadResponseDto::class))]
         ),
-        ApiResponse(
-            responseCode = "404",
-            description = "Not Found",
+        ApiResponse(responseCode = "404", description = "Not Found",
             content = [Content(schema = Schema(implementation = CoreNotFoundResponseDto::class))]
         ),
-        ApiResponse(
-            responseCode = "500",
-            description = "Internal Server Error",
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
             content = [Content(schema = Schema(implementation = CoreInternalServerResponseDto::class))]
         )
     ])

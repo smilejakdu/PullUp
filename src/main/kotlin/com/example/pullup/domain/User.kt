@@ -2,11 +2,11 @@ package com.example.pullup.domain
 
 import com.example.pullup.shared.TimeEntity
 import jakarta.persistence.*
+import lombok.Builder
 import lombok.Data
 import lombok.NoArgsConstructor
 
 @Entity
-@Data
 @NoArgsConstructor
 @Table(name = "users")
 data class User(
@@ -18,6 +18,9 @@ data class User(
 
     @Column(name="email", nullable = false, unique = true)
     val email: String,
+
+    @Column(name="teacher_check", nullable = false, unique = true)
+    val teacherCheck: Boolean = false,
 
     @Column(name = "password", nullable = false)
     val password: String,

@@ -5,18 +5,16 @@ import com.example.pullup.controller.UserDto.LoginUserRequestDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException
-import com.example.pullup.shared.response.CoreBadResponseDto
 import com.example.pullup.shared.response.CoreSuccessResponseDto
 import com.example.pullup.shared.response.CoreSuccessResponseWithData
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(private val userRepository: IUserRepository) {
 
-    fun getUserById(id: Long): User {
+    fun findUserById(id: Long): User {
         return userRepository.findById(id).orElseThrow {
             Exception("User not found")
         }
@@ -24,13 +22,13 @@ class UserService(private val userRepository: IUserRepository) {
 
     fun createUser(userRequestDto: CreateUserRequestDto): CoreSuccessResponseDto {
         val user = User(
+            teacherCheck = userRequestDto.teacherCheck,
             name = userRequestDto.name,
             email = userRequestDto.email,
             password = hashPassword(userRequestDto.password)
         )
 
         userRepository.save(user)
-
         return CoreSuccessResponseDto()
     }
 
@@ -43,9 +41,7 @@ class UserService(private val userRepository: IUserRepository) {
             ) }
 
         return if (checkPassword(user.password, userFromDb.password)) {
-            CoreSuccessResponseWithData(
-                data = userFromDb
-            )
+            CoreSuccessResponseWithData(data = userFromDb)
         } else {
             throw HttpException(
                 ok = false,
