@@ -2,8 +2,8 @@ package com.example.pullup.shared.exception
 
 import org.springframework.http.HttpStatus
 
-open class HttpException(
-    var ok: Boolean = false,
-    var httpStatus: HttpStatus? = null,
-    override var message: String? = null,
-) : Exception(message)
+data class HttpException(
+    val ok: Boolean = false,
+    val httpStatus: HttpStatus? = null,
+    override val message: String? = null,
+):RuntimeException(message)

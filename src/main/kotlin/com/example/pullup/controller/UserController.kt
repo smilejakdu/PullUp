@@ -21,9 +21,25 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     val userService: UserService
 ) {
+
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "SUCCESS",
+            content = [Content(schema = Schema(implementation = CoreSuccessResponseWithData::class))]
+        ),
+        ApiResponse(responseCode = "400", description = "Bad Request",
+            content = [Content(schema = Schema(implementation = CoreBadResponseDto::class))]
+        ),
+        ApiResponse(responseCode = "404", description = "Not Found",
+            content = [Content(schema = Schema(implementation = CoreNotFoundResponseDto::class))]
+        ),
+        ApiResponse(responseCode = "500", description = "Internal Server Error",
+            content = [Content(schema = Schema(implementation = CoreInternalServerResponseDto::class))]
+        )
+    ])
     @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: Long): ResponseEntity<User> {
-        return ResponseEntity.ok(userService.findUserById(id))
+    fun getUserById(@PathVariable id: Long): CoreSuccessResponseWithData {
+        val responseEntitiy =  ResponseEntity.ok(userService.findUserById(id))
+        return CoreSuccessResponseWithData(data = responseEntitiy.body)
     }
 
     @ApiResponses(value = [

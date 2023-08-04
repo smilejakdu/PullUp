@@ -6,7 +6,6 @@ import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException
-import com.example.pullup.shared.response.CoreSuccessResponseDto
 import com.example.pullup.shared.response.CoreSuccessResponseWithData
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.http.HttpStatus
@@ -17,8 +16,11 @@ class UserService(private val userRepository: IUserRepository) {
 
     fun findUserById(id: Long): User {
         return userRepository.findById(id).orElseThrow {
-            Exception("User not found")
-        }
+            HttpException(
+                ok = false,
+                httpStatus = HttpStatus.NOT_FOUND,
+                message = "User not found"
+            )}
     }
 
     fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {

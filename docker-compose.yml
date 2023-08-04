@@ -23,6 +23,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     ports:
       - "13010:13010"
+    stdin_open: true
+    tty: true
 
 networks:
   default:
