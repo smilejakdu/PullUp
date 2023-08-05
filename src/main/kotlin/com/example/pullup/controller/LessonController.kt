@@ -40,8 +40,10 @@ class LessonController(
         @RequestParam(defaultValue = "10") size: Int
     ): CoreSuccessResponseWithData {
         val pageable: PageRequest = PageRequest.of(page, size)
-        val responseEntitiy =  ResponseEntity.ok(lessonService.getLessonList(pageable).content)
-        println("responseEntitiy: $responseEntitiy")
-        return CoreSuccessResponseWithData(data = responseEntitiy)
+        val responseLessonData =  ResponseEntity.ok(lessonService.getLessonList(pageable))
+        return if (responseLessonData.statusCode.is2xxSuccessful)
+            CoreSuccessResponseWithData(data = responseLessonData.body)
+        else
+            CoreSuccessResponseWithData(data = null)
     }
 }
