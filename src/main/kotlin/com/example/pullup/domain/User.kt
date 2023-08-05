@@ -1,25 +1,26 @@
 package com.example.pullup.domain
 
-import com.example.pullup.shared.TimeEntity
+import com.example.pullup.shared.domain.TimeEntity
 import jakarta.persistence.*
 import lombok.NoArgsConstructor
+import java.time.LocalDateTime
 
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
 data class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 1,
+    var id: Long = 1,
 
     @Column(name = "name", nullable = false)
-    val name: String,
+    var name: String,
 
     @Column(name="email", nullable = false, unique = true)
-    val email: String,
+    var email: String,
 
-    @Column(name="teacher_check", nullable = false, unique = true)
-    val teacherCheck: Boolean = false,
+    @Column(name="teacher_check", nullable = false)
+    var teacherCheck: Boolean = false,
 
     @Column(name = "password", nullable = false)
-    val password: String,
+    var password: String,
 ): TimeEntity()

@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(private val userRepository: IUserRepository) {
+class UserService(
+    private val userRepository: IUserRepository
+) {
 
     fun findUserById(id: Long): User {
         return userRepository.findById(id).orElseThrow {
@@ -25,10 +27,12 @@ class UserService(private val userRepository: IUserRepository) {
 
     fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {
         val email = userRequestDto.email;
+        val name = userRequestDto.name;
+        val teacherCheck = userRequestDto.teacherCheck;
         val password = userRequestDto.password;
         val rePassword = userRequestDto.rePassword;
 
-        if (userRepository.findByEmail(userRequestDto.email).isPresent) {
+        if (userRepository.findByEmail(email).isPresent) {
             throw HttpException(
                 ok = false,
                 httpStatus = HttpStatus.BAD_REQUEST,
@@ -45,10 +49,10 @@ class UserService(private val userRepository: IUserRepository) {
         }
 
         val user = User(
-            teacherCheck = userRequestDto.teacherCheck,
-            name = userRequestDto.name,
-            email = userRequestDto.email,
-            password = hashPassword(userRequestDto.password)
+            teacherCheck = teacherCheck,
+            name = name,
+            email = email,
+            password = hashPassword(password)
         )
 
         val savedUser = userRepository.save(user)

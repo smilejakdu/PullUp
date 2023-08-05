@@ -1,6 +1,6 @@
 package com.example.pullup.domain
 
-import com.example.pullup.shared.TimeEntity
+import com.example.pullup.shared.domain.TimeEntity
 import jakarta.persistence.*
 import lombok.Data
 import lombok.NoArgsConstructor
@@ -16,9 +16,12 @@ data class Lesson(
     @Column(name = "name", nullable = false)
     val name: String,
 
+    @Column(name = "description", nullable = false)
+    val description: String,
+
     @Column(name = "price", nullable = false)
     val price: String,
 
     @Column(name="user_id", nullable = false)
     val userId: Int
-):TimeEntity()
+): TimeEntity()
