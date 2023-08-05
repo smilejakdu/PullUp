@@ -3,6 +3,7 @@ package com.example.pullup.services
 import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
 import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
+import com.example.pullup.controller.userDto.loginUserDto.LoginUserResponseDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException
@@ -73,7 +74,14 @@ class UserService(
             ) }
 
         return if (checkPassword(user.password, userFromDb.password)) {
-            CoreSuccessResponseWithData(data = userFromDb)
+            val userResponseDto = LoginUserResponseDto(
+                id = userFromDb.id,
+                name = userFromDb.name,
+                email = userFromDb.email,
+                teacherCheck = userFromDb.teacherCheck
+            )
+
+            CoreSuccessResponseWithData(data = userResponseDto)
         } else {
             throw HttpException(
                 ok = false,
