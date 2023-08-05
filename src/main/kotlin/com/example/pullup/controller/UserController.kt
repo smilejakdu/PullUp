@@ -4,20 +4,20 @@ import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
 import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserResponseDto
-import com.example.pullup.domain.User
 import com.example.pullup.services.UserService
-import com.example.pullup.shared.response.*
+import com.example.pullup.shared.response.CoreBadResponseDto
+import com.example.pullup.shared.response.CoreInternalServerResponseDto
+import com.example.pullup.shared.response.CoreNotFoundResponseDto
+import com.example.pullup.shared.response.CoreSuccessResponseWithData
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
-import lombok.AllArgsConstructor
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/users")
-@AllArgsConstructor
 class UserController(
     val userService: UserService
 ) {

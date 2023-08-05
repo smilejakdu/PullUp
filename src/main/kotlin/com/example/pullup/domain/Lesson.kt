@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor
 @Table(name = "lessons")
 data class Lesson(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val id: Long = 1,
 
     @Column(name = "name", nullable = false)
     val name: String,

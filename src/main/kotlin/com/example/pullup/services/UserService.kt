@@ -24,6 +24,26 @@ class UserService(private val userRepository: IUserRepository) {
     }
 
     fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {
+        val email = userRequestDto.email;
+        val password = userRequestDto.password;
+        val rePassword = userRequestDto.rePassword;
+
+        if (userRepository.findByEmail(userRequestDto.email).isPresent) {
+            throw HttpException(
+                ok = false,
+                httpStatus = HttpStatus.BAD_REQUEST,
+                message = "User with this email already exists"
+            )
+        }
+
+        if (password != rePassword) {
+            throw HttpException(
+                ok = false,
+                httpStatus = HttpStatus.BAD_REQUEST,
+                message = "Passwords do not match"
+            )
+        }
+
         val user = User(
             teacherCheck = userRequestDto.teacherCheck,
             name = userRequestDto.name,
@@ -31,8 +51,13 @@ class UserService(private val userRepository: IUserRepository) {
             password = hashPassword(userRequestDto.password)
         )
 
-        userRepository.save(user)
-        return CreateUserResponseDto(data = user)
+        val savedUser = userRepository.save(user)
+        return CreateUserResponseDto(
+            ok = true,
+            message = "SUCCESS",
+            statusCode = HttpStatus.valueOf(200).value(),
+            data = savedUser
+        )
     }
 
     fun loginUser(user: LoginUserRequestDto): CoreSuccessResponseWithData {
@@ -55,7 +80,7 @@ class UserService(private val userRepository: IUserRepository) {
     }
 
     fun hashPassword(password: String): String {
-        return BCrypt.hashpw(password, BCrypt.gensalt())
+        return BCrypt.hashpw(password, BCrypt.gensalt(12))
     }
 
     fun checkPassword(password: String, hashedPassword: String): Boolean {

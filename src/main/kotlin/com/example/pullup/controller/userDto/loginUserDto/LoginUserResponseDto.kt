@@ -7,11 +7,11 @@ import java.util.Objects
 
 data class LoginUserResponseDto(
     @Schema(example = "true")
-    override val success: Boolean = true,
+    override val ok: Boolean = true,
     @Schema(example = "SUCCESS")
     override val message: String = "Success",
     @Schema(example = "200")
     override val statusCode: Int = HttpStatusCode.valueOf(200).value(),
     @Schema()
     override val data: Objects
-): CoreSuccessResponseWithData(success, message, statusCode, data)
+): CoreSuccessResponseWithData(ok, message, statusCode, data)

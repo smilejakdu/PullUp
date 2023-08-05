@@ -10,5 +10,7 @@ data class CreateUserRequestDto (
     @Schema(example = "ash@gmail.com")
     val email: String,
     @Schema(example = "password")
-    val password: String
+    val password: String,
+    @Schema(example = "rePassword")
+    val rePassword: String
 )
