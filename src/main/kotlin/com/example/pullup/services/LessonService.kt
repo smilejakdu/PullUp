@@ -2,7 +2,6 @@ package com.example.pullup.services
 
 import com.example.pullup.domain.Lesson
 import com.example.pullup.repository.ILessonRepository
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
@@ -12,7 +11,7 @@ class LessonService(
 ){
     fun getLessonList(
         pageable: PageRequest
-    ): Page<Lesson> {
-        return lessonRepository.findAll(pageable)
+    ): MutableList<Lesson> {
+        return lessonRepository.findAll(pageable).content;
     }
 }
