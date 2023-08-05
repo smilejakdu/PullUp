@@ -37,8 +37,8 @@ class UserController(
     ])
     @GetMapping("/{id}")
     fun getUserById(@PathVariable id: Long): CoreSuccessResponseWithData {
-        val responseEntitiy =  ResponseEntity.ok(userService.findUserById(id))
-        return CoreSuccessResponseWithData(data = responseEntitiy.body)
+        val responseUserData =  ResponseEntity.ok(userService.findUserById(id))
+        return CoreSuccessResponseWithData(data = responseUserData.body)
     }
 
     @ApiResponses(value = [

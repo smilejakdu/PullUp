@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 @Service
 class LessonService(
     private val lessonRepository: ILessonRepository
-){
+) {
     fun getLessonList(
         pageable: PageRequest
     ): MutableList<Lesson> {
