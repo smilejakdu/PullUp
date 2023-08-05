@@ -59,8 +59,8 @@ class UserController(
     @PostMapping("create")
     fun createUser(
         @RequestBody body: CreateUserRequestDto
-    ): ResponseEntity<CreateUserResponseDto> {
-        return ResponseEntity.ok(userService.createUser(body))
+    ): CreateUserResponseDto {
+        return userService.createUser(body)
     }
 
     @ApiResponses(value = [
