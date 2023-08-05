@@ -5,5 +5,5 @@ data class LoginUserResponseDto(
     val name: String,
     val email: String,
     val teacherCheck: Boolean,
-    val token: String
+    val accessToken: String
 )

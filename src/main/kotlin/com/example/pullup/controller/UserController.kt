@@ -3,22 +3,30 @@ package com.example.pullup.controller
 import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
 import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
+import com.example.pullup.domain.User
 import com.example.pullup.services.UserService
 import com.example.pullup.shared.response.CoreBadResponseDto
 import com.example.pullup.shared.response.CoreInternalServerResponseDto
 import com.example.pullup.shared.response.CoreNotFoundResponseDto
 import com.example.pullup.shared.response.CoreSuccessResponseWithData
+import com.example.pullup.shared.service.AuthService
+import io.jsonwebtoken.Jwts
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/users")
 class UserController(
-    val userService: UserService
+    private val userService: UserService,
+    private val authService: AuthService,
 ) {
 
     @ApiResponses(value = [
@@ -78,8 +86,22 @@ class UserController(
     ])
     @PostMapping("login")
     fun loginUser(
-        @RequestBody body: LoginUserRequestDto
+        @RequestBody body: LoginUserRequestDto,
+        response: HttpServletResponse
     ): ResponseEntity<CoreSuccessResponseWithData> {
-        return ResponseEntity.ok(userService.loginUser(body))
+        return ResponseEntity.ok(userService.loginUser(body, response))
+    }
+    @GetMapping("/my_info")
+    fun myinfo(
+        request: HttpServletRequest
+    ): ResponseEntity<CoreSuccessResponseWithData> {
+        // request 로 부터 쿠키를 가져온다.
+        val cookies: Array<Cookie>? = request.cookies
+        var foundUser: User? = null
+        // cookies 값이 null 이 아닌지 체크한다.
+        if (cookies != null) {
+            foundUser = authService.getUserDataFromCookie(cookies)
+        }
+        return ResponseEntity.ok(CoreSuccessResponseWithData(data = foundUser))
     }
 }

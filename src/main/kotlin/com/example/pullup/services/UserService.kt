@@ -8,22 +8,22 @@ import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException
 import com.example.pullup.shared.response.CoreSuccessResponseWithData
+import com.example.pullup.shared.service.AuthService
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import java.util.*
 
 @Service
 class UserService(
-    private val userRepository: IUserRepository
+    private val userRepository: IUserRepository,
+    private val authService: AuthService,
 ) {
-
-    // application.properties 에 있는 JWT_SECRET 을 가져오도록 한다.
-    @Value("\${JWT_SECRET}")
-    private lateinit var JWT_SECRET: String
 
     fun findUserById(id: Long): User {
         return userRepository.findById(id).orElseThrow {
@@ -73,7 +73,10 @@ class UserService(
         )
     }
 
-    fun loginUser(user: LoginUserRequestDto): CoreSuccessResponseWithData {
+    fun loginUser(
+        user: LoginUserRequestDto,
+        response: HttpServletResponse
+    ): CoreSuccessResponseWithData {
         try {
             val userFromDb = userRepository.findByEmail(user.email)
                 .orElseThrow { HttpException(
@@ -90,14 +93,21 @@ class UserService(
                 )
             }
 
-            val token = createToken(userFromDb)
+            val token = authService.createToken(userFromDb)
             val userResponseDto = LoginUserResponseDto(
                 id = userFromDb.id,
                 name = userFromDb.name,
                 email = userFromDb.email,
                 teacherCheck = userFromDb.teacherCheck,
-                token = token
+                accessToken = token
             )
+
+            // Create a new cookie with the JWT token
+            val cookie = Cookie("accessToken", token)
+            cookie.maxAge = 60 * 60 * 24
+            cookie.isHttpOnly = true
+            // Adding cookie to response
+            response.addCookie(cookie)
 
             return CoreSuccessResponseWithData(
                 ok = true,
@@ -120,19 +130,5 @@ class UserService(
 
     fun checkPassword(password: String, hashedPassword: String): Boolean {
         return BCrypt.checkpw(password, hashedPassword)
-    }
-
-    fun createToken(user: User): String {
-        val claims = Jwts.claims().setSubject(user.email)
-        val now = Date()
-        val validity = Date(now.time + 3600000)  // 1 시간 유효
-        val key = JWT_SECRET.toByteArray()  // Should be in a secure place
-
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(validity)
-            .signWith(SignatureAlgorithm.HS256, key)
-            .compact()
     }
 }
