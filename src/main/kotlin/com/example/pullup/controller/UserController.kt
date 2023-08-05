@@ -3,6 +3,7 @@ package com.example.pullup.controller
 import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
 import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
+import com.example.pullup.controller.userDto.loginUserDto.UserResponseDto
 import com.example.pullup.domain.User
 import com.example.pullup.services.UserService
 import com.example.pullup.shared.response.CoreBadResponseDto
@@ -97,7 +98,7 @@ class UserController(
     ): ResponseEntity<CoreSuccessResponseWithData> {
         // request 로 부터 쿠키를 가져온다.
         val cookies: Array<Cookie>? = request.cookies
-        var foundUser: User? = null
+        var foundUser: UserResponseDto? = null
         // cookies 값이 null 이 아닌지 체크한다.
         if (cookies != null) {
             foundUser = authService.getUserDataFromCookie(cookies)

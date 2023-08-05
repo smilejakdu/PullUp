@@ -1,5 +1,6 @@
 package com.example.pullup.shared.service
 
+import com.example.pullup.controller.userDto.loginUserDto.UserResponseDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException
@@ -36,7 +37,7 @@ class AuthService(
 
     fun getUserDataFromCookie(
         cookies: Array<Cookie>?
-    ): User {
+    ): UserResponseDto {
         var email = ""
         try {
             if (cookies == null) {
@@ -65,12 +66,19 @@ class AuthService(
                 message = "Invalid token",
             )
         }
-        return userRepository.findByEmail(email).orElseThrow {
+        val foundUser = userRepository.findByEmail(email).orElseThrow {
             HttpException(
                 ok = false,
                 httpStatus = HttpStatus.NOT_FOUND,
                 "User not found",
             )
         }
+        // 패스워드 지우기
+        return UserResponseDto(
+            id = foundUser.id,
+            email = foundUser.email,
+            name = foundUser.name,
+            teacherCheck = foundUser.teacherCheck,
+        )
     }
 }

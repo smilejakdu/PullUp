@@ -4,6 +4,7 @@ import com.example.pullup.controller.userDto.createUserDto.CreateUserRequestDto
 import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserResponseDto
+import com.example.pullup.controller.userDto.loginUserDto.UserResponseDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.shared.exception.HttpException
@@ -94,11 +95,14 @@ class UserService(
             }
 
             val token = authService.createToken(userFromDb)
-            val userResponseDto = LoginUserResponseDto(
+            val userResponseDto = UserResponseDto(
                 id = userFromDb.id,
                 name = userFromDb.name,
                 email = userFromDb.email,
                 teacherCheck = userFromDb.teacherCheck,
+            )
+            val loginUserResponseDto = LoginUserResponseDto(
+                user = userResponseDto,
                 accessToken = token
             )
 
@@ -113,7 +117,7 @@ class UserService(
                 ok = true,
                 message = "SUCCESS",
                 statusCode = HttpStatus.valueOf(200).value(),
-                data = userResponseDto
+                data = loginUserResponseDto
             )
         } catch (e: Exception) {
             throw HttpException(
