@@ -11,11 +11,19 @@ import com.example.pullup.shared.response.CoreSuccessResponseWithData
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import org.springframework.beans.factory.annotation.Value
+import java.util.*
 
 @Service
 class UserService(
     private val userRepository: IUserRepository
 ) {
+
+    // application.properties 에 있는 JWT_SECRET 을 가져오도록 한다.
+    @Value("\${JWT_SECRET}")
+    private lateinit var JWT_SECRET: String
 
     fun findUserById(id: Long): User {
         return userRepository.findById(id).orElseThrow {
@@ -66,27 +74,42 @@ class UserService(
     }
 
     fun loginUser(user: LoginUserRequestDto): CoreSuccessResponseWithData {
-        val userFromDb = userRepository.findByEmail(user.email)
-            .orElseThrow { HttpException(
-                ok = false,
-                httpStatus = HttpStatus.NOT_FOUND,
-                message = "User not found"
-            ) }
+        try {
+            val userFromDb = userRepository.findByEmail(user.email)
+                .orElseThrow { HttpException(
+                    ok = false,
+                    httpStatus = HttpStatus.NOT_FOUND,
+                    message = "User not found"
+                ) }
 
-        return if (checkPassword(user.password, userFromDb.password)) {
+            if (!checkPassword(user.password, userFromDb.password)) {
+                throw HttpException(
+                    ok = false,
+                    httpStatus = HttpStatus.BAD_REQUEST,
+                    message = "Password is not correct"
+                )
+            }
+
+            val token = createToken(userFromDb)
             val userResponseDto = LoginUserResponseDto(
                 id = userFromDb.id,
                 name = userFromDb.name,
                 email = userFromDb.email,
-                teacherCheck = userFromDb.teacherCheck
+                teacherCheck = userFromDb.teacherCheck,
+                token = token
             )
 
-            CoreSuccessResponseWithData(data = userResponseDto)
-        } else {
+            return CoreSuccessResponseWithData(
+                ok = true,
+                message = "SUCCESS",
+                statusCode = HttpStatus.valueOf(200).value(),
+                data = userResponseDto
+            )
+        } catch (e: Exception) {
             throw HttpException(
                 ok = false,
-                httpStatus = HttpStatus.BAD_REQUEST,
-                "Password is not correct"
+                httpStatus = HttpStatus.INTERNAL_SERVER_ERROR,
+                message = "서버 에러",
             )
         }
     }
@@ -97,5 +120,19 @@ class UserService(
 
     fun checkPassword(password: String, hashedPassword: String): Boolean {
         return BCrypt.checkpw(password, hashedPassword)
+    }
+
+    fun createToken(user: User): String {
+        val claims = Jwts.claims().setSubject(user.email)
+        val now = Date()
+        val validity = Date(now.time + 3600000)  // 1 시간 유효
+        val key = JWT_SECRET.toByteArray()  // Should be in a secure place
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(now)
+            .setExpiration(validity)
+            .signWith(SignatureAlgorithm.HS256, key)
+            .compact()
     }
 }

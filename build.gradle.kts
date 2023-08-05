@@ -35,6 +35,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     // database
     implementation("mysql:mysql-connector-java:8.0.28") // JDBC 드라이버 버전을 지정해주세요
+    implementation("io.arrow-kt:arrow-core:1.0.1")  // Please use the latest version
+    // jwt
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.5")
+    implementation("io.arrow-kt:arrow-core:1.0.0")
+    implementation("javax.xml.bind:jaxb-api:2.3.0")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
     implementation("org.mindrot:jbcrypt:0.4")
