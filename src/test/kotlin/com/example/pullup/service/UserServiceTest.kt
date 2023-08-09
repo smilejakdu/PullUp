@@ -5,8 +5,11 @@ import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.domain.User
 import com.example.pullup.repository.IUserRepository
 import com.example.pullup.services.UserService
+import com.example.pullup.shared.exception.HttpException
+import com.example.pullup.shared.service.AuthService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mindrot.jbcrypt.BCrypt
@@ -21,6 +24,9 @@ import java.util.*
 internal class UserServiceTest {
     @Mock
     private lateinit var userRepository: IUserRepository
+
+    @Mock
+    private lateinit var authService: AuthService
 
     @InjectMocks
     private lateinit var userService: UserService
@@ -47,17 +53,11 @@ internal class UserServiceTest {
 
     @Test
     fun findUserByIdNotFound() {
-        // Given
-        val userId = 1L
-        Mockito.`when`(userRepository.findById(userId)).thenReturn(Optional.empty())
+        val nonExistentUserId = 9999L
 
-        // When
-        val exception = Assertions.assertThrows(
-            Exception::class.java
-        ) { userService.findUserById(userId) }
-
-        // Then
-        assertEquals("User not found", exception.message)
+        assertThrows(HttpException::class.java) {
+            userService.findUserById(nonExistentUserId)
+        }
     }
 
     @Test

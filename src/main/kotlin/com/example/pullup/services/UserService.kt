@@ -26,13 +26,9 @@ class UserService(
     private val authService: AuthService,
 ) {
 
-    fun findUserById(id: Long): User {
-        return userRepository.findById(id).orElseThrow {
-            HttpException(
-                ok = false,
-                httpStatus = HttpStatus.NOT_FOUND,
-                message = "User not found"
-            )}
+    fun findUserById(id: Long): User? {
+        // TODO: 구현이 필요합니다.
+        return null
     }
 
     fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {

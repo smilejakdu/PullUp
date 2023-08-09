@@ -14,4 +14,10 @@ class LessonService(
     ): MutableList<Lesson> {
         return lessonRepository.findAll(pageable).content;
     }
+
+    fun getLessonOneById(
+        id: Long
+    ): Lesson {
+        return lessonRepository.findById(id).get()
+    }
 }
