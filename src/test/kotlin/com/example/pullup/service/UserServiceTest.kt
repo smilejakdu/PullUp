@@ -81,13 +81,12 @@ internal class UserServiceTest {
             password = hashPassword("password"),
         )
         println("user: $user")
-        Mockito.`when`(userRepository.save(Mockito.argThat {
+        `when`(userRepository.save(Mockito.argThat {
             it.id == user.id
                     && it.name == user.name
                     && it.email == user.email
                     && it.teacherCheck == user.teacherCheck
         })).thenReturn(user)
-        // ...        // When
         val createUserRequestDto = CreateUserRequestDto(
             teacherCheck = false, // or true, depending on what you want to test
             name = "John Doe",

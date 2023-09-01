@@ -5,6 +5,7 @@ import com.example.pullup.controller.userDto.createUserDto.CreateUserResponseDto
 import com.example.pullup.controller.userDto.loginUserDto.LoginUserRequestDto
 import com.example.pullup.controller.userDto.loginUserDto.UserResponseDto
 import com.example.pullup.services.UserService
+import com.example.pullup.shared.exception.HttpException
 import com.example.pullup.shared.response.CoreBadResponseDto
 import com.example.pullup.shared.response.CoreInternalServerResponseDto
 import com.example.pullup.shared.response.CoreNotFoundResponseDto
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -94,7 +96,13 @@ class UserController(
         // cookies 값이 null 이 아닌지 체크한다.
         if (cookies != null) {
             foundUser = authService.getUserDataFromCookie(cookies)
+            return ResponseEntity.ok(CoreSuccessResponseWithData(data = foundUser))
+        } else {
+            throw HttpException(
+                ok = false,
+                httpStatus = HttpStatus.BAD_REQUEST,
+                message = "Cookie is null"
+            )
         }
-        return ResponseEntity.ok(CoreSuccessResponseWithData(data = foundUser))
     }
 }
