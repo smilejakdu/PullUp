@@ -9,5 +9,4 @@ class PullUpApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }

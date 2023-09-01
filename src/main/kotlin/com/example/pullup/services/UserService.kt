@@ -23,17 +23,16 @@ class UserService(
 ) {
 
     fun findUserById(id: Long): User? {
-        // TODO: 구현이 필요합니다.
-        return null
+        return userRepository.findById(id).orElseThrow {
+            HttpException(
+                ok = false,
+                httpStatus = HttpStatus.NOT_FOUND,
+                message = "User not found"
+            )
+        }
     }
 
-    fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {
-        val email = userRequestDto.email;
-        val name = userRequestDto.name;
-        val teacherCheck = userRequestDto.teacherCheck;
-        val password = userRequestDto.password;
-        val rePassword = userRequestDto.rePassword;
-
+    private fun checkExistingEmail(email:String) {
         if (userRepository.findByEmail(email).isPresent) {
             throw HttpException(
                 ok = false,
@@ -41,7 +40,9 @@ class UserService(
                 message = "User with this email already exists"
             )
         }
+    }
 
+    private fun validatePassword(password:String, rePassword:String) {
         if (password != rePassword) {
             throw HttpException(
                 ok = false,
@@ -49,12 +50,18 @@ class UserService(
                 message = "Passwords do not match"
             )
         }
+    }
+
+    fun createUser(userRequestDto: CreateUserRequestDto): CreateUserResponseDto {
+        checkExistingEmail(userRequestDto.email)
+        // 기존에 가입한 이메일이 있는지 확인한다.
+        validatePassword(userRequestDto.password, userRequestDto.rePassword)
 
         val user = User(
-            teacherCheck = teacherCheck,
-            name = name,
-            email = email,
-            password = hashPassword(password)
+            teacherCheck = userRequestDto.teacherCheck,
+            name = userRequestDto.name,
+            email = userRequestDto.email,
+            password = hashPassword(userRequestDto.password)
         )
 
         val savedUser = userRepository.save(user)
