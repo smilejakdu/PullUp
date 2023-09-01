@@ -18,9 +18,6 @@ data class User(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @Column(name = "profile_image", nullable = true)
-    var profileImage: String,
-
     @Column(name="email", nullable = false, unique = true)
     var email: String,
 
@@ -30,6 +27,6 @@ data class User(
     @Column(name = "password", nullable = false)
     var password: String,
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",)
     var lessons: MutableList<Lesson> = mutableListOf(),
 ): TimeEntity()

@@ -7,7 +7,6 @@ import com.example.pullup.repository.IUserRepository
 import com.example.pullup.services.UserService
 import com.example.pullup.shared.exception.HttpException
 import com.example.pullup.shared.service.AuthService
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
