@@ -10,12 +10,15 @@ import com.example.pullup.shared.service.AuthService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mindrot.jbcrypt.BCrypt
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.http.HttpStatus
 import java.util.*
 
 
@@ -34,28 +37,36 @@ internal class UserServiceTest {
     fun findUserByIdTest() {
         // Given
         val userId = 1L
-        val user = User(
+        val expectedUser = User(
             id = userId,
             name = "John Doe",
             email = "john@example.com",
             teacherCheck = false, // or true, depending on what you want to test
             password = "password"
         )
-        Mockito.`when`<Optional<User>>(userRepository.findById(userId)).thenReturn(Optional.of<User>(user))
+        `when`<Optional<User>>(userRepository.findById(userId)).thenReturn(Optional.of<User>(expectedUser))
 
         // When
         val result = userService.findUserById(userId)
 
         // Then
-        assertEquals(user, result)
+        assertEquals(expectedUser, result)
     }
 
     @Test
     fun findUserByIdNotFound() {
+        // given
         val nonExistentUserId = 9999L
 
+        // when
+        `when`<Optional<User>>(userRepository.findById(nonExistentUserId)).thenReturn(Optional.empty())
+
+        // then
         assertThrows(HttpException::class.java) {
             userService.findUserById(nonExistentUserId)
+        }.apply {
+            assertEquals(HttpStatus.NOT_FOUND, httpStatus)
+            assertEquals("User not found", this.message)
         }
     }
 
