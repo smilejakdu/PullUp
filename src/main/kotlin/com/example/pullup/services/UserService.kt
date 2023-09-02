@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.ResponseEntity
 
 @Service
 class UserService(
@@ -22,14 +23,21 @@ class UserService(
     private val authService: AuthService,
 ) {
 
-    fun findUserById(id: Long): User? {
-        return userRepository.findById(id).orElseThrow {
-            HttpException(
+    fun findUserById(userId: Long): ResponseEntity<CoreSuccessResponseWithData> {
+        // 유저 조회 ( 리뷰와 함께 )
+        val user = userRepository.findUserWithReviewsById(userId)
+            .orElseThrow { HttpException(
                 ok = false,
                 httpStatus = HttpStatus.NOT_FOUND,
                 message = "User not found"
-            )
-        }
+            ) }
+
+        return ResponseEntity.ok(CoreSuccessResponseWithData(
+            ok = true,
+            message = "SUCCESS",
+            statusCode = HttpStatus.valueOf(200).value(),
+            data = user
+        ))
     }
 
     private fun checkExistingEmail(email:String) {

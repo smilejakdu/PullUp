@@ -10,7 +10,6 @@ import com.example.pullup.shared.service.AuthService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mindrot.jbcrypt.BCrypt
 import org.mockito.InjectMocks

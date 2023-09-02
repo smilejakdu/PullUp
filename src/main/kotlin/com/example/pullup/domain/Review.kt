@@ -19,7 +19,7 @@ data class Review (
     @Column(name = "content", nullable = false)
     val content: String,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     val user: User
 ): TimeEntity()

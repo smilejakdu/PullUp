@@ -18,7 +18,7 @@ class ReviewService (
     ): CreateReviewResponseDto {
         val reviewContent = createReviewBody.content;
         println(reviewContent)
-        var review = Review(
+        val review = Review(
             content = reviewContent,
             user = user
         )
@@ -31,8 +31,7 @@ class ReviewService (
         )
     }
 
-    fun getReviewList(): MutableList<Review> {
-        return reviewRepository.findAll()
+    fun findReviewsByUserId(userId: Int): MutableList<Review> {
     }
 
     fun getReviewOneById(

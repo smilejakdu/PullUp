@@ -27,6 +27,9 @@ data class User(
     @Column(name = "password", nullable = false)
     var password: String,
 
-    @OneToMany(mappedBy = "user",)
-    var lessons: MutableList<Lesson> = mutableListOf(),
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    var lessons: List<Lesson> = listOf(),
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    var reviews: List<Review> = listOf(),
 ): TimeEntity()

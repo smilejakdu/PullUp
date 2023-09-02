@@ -105,4 +105,11 @@ class UserController(
             )
         }
     }
+
+    @GetMapping("/{userId}")
+    fun getOneUser(
+        @PathVariable userId: Long
+    ): ResponseEntity<CoreSuccessResponseWithData> {
+        return ResponseEntity.ok(userService.findUserById(userId))
+    }
 }
